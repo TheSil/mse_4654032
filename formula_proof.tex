@@ -1,0 +1,322 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage[margin=1in]{geometry}
+\newcommand{\leg}[2]{\left(\frac{#1}{#2}\right)}
+\DeclareMathOperator{\Imag}{Im}
+\DeclareMathOperator{\Real}{Re}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\title{The closed form for $\displaystyle S_n=\sum_{\ell=0}^{n-1}(\ell^2\bmod n)$\\[2pt]
+\large a step-by-step derivation}
+\author{}
+\date{}
+\begin{document}
+\maketitle
+
+\section{The quantity and the goal}
+
+For an integer $n\ge2$ we study
+\[
+S_n=\sum_{\ell=0}^{n-1}\bigl(\ell^2\bmod n\bigr),
+\]
+where $\ell^2\bmod n\in\{0,1,\dots,n-1\}$ is the least nonnegative remainder of $\ell^2$ on division by $n$.
+
+\subsection{An equivalent ``by value'' description}
+Instead of summing over $\ell$, we may sum over the possible \emph{values} $j=\ell^2\bmod n$. If
+$N(j)=\#\{x\bmod n:\ x^2\equiv j\}$ is the number of square roots of $j$, then collecting equal values,
+\[
+S_n=\sum_{j=0}^{n-1} j\,N(j).
+\]
+This viewpoint explains where the arithmetic enters: $N(j)$ is a multiplicative, character-theoretic object,
+and $S_n$ is its first moment. We will not use this form directly, but it is the reason class numbers appear.
+
+\subsection{Notation fixed once and for all}
+Throughout, set
+\[
+\zeta=e^{2\pi i/n},\qquad n=m^2 d\ \ (d\text{ squarefree}),\qquad
+G(t)=\sum_{\ell=0}^{n-1}\zeta^{t\ell^2}.
+\]
+Here $m^2$ is the largest square dividing $n$, so $m=\prod_{p^a\,\|\,n}p^{\lfloor a/2\rfloor}$; and $G(t)$ is a
+\emph{quadratic Gauss sum}. We will prove:
+
+\begin{theorem}\label{thm:main}
+\[
+S_n=\frac{n(n-1)}{2}-\frac{n(m-1)}{2}
+-2n\sum_{\substack{D<0\ \text{fundamental}\\ D\,\mid\, n}}\frac{h_{\mathbb{Q}(\sqrt D)}}{w_D}
+\sum_{D\cdot s^2\,\mid\, n}s\prod_{p\mid s}\Bigl(1-\tfrac1p\leg{D}{p}\Bigr),
+\]
+where $D$ runs over negative fundamental discriminants dividing $n$, $h_{\mathbb{Q}(\sqrt D)}$ is the class
+number and $w_D=|\mathcal{O}_{\mathbb{Q}(\sqrt D)}^\times|\in\{2,4,6\}$ the number of units of $\mathbb{Q}(\sqrt D)$,
+and $\leg{D}{p}$ is the Kronecker symbol.
+\end{theorem}
+
+\section{Strategy}
+
+The obstacle is the operation ``$\bmod n$,'' which is not algebraic. The plan is to \emph{linearise} it:
+\begin{enumerate}
+\item Expand the residue function $a\mapsto(a\bmod n)$ in the additive characters $\zeta^{ta}$ of $\mathbb{Z}/n$
+      (finite Fourier analysis). This converts the awkward ``$\bmod$'' into a clean sum of exponentials.
+\item Substituting $a=\ell^2$ and summing over $\ell$ replaces $\sum_\ell\zeta^{t\ell^2}$ by the Gauss sum $G(t)$,
+      a thoroughly understood object.
+\item Gauss's evaluation of $G(t)$ produces a \emph{quadratic character}, and Dirichlet's class number formula
+      turns the remaining sum into class numbers.
+\end{enumerate}
+Steps 1--2 are elementary; the two deep classical theorems live in Step~3.
+
+\section{The Fourier identity}
+
+\subsection{Finite Fourier analysis on $\mathbb{Z}/n$}
+Every function $f:\mathbb{Z}/n\to\mathbb{C}$ has a unique expansion
+\[
+f(a)=\sum_{t=0}^{n-1}\hat f(t)\,\zeta^{ta},\qquad \hat f(t)=\frac1n\sum_{a=0}^{n-1}f(a)\,\zeta^{-ta},
+\]
+because the characters $\{\zeta^{ta}\}_{t}$ are orthogonal:
+$\sum_{a=0}^{n-1}\zeta^{(t-t')a}=n$ if $t\equiv t'$ and $0$ otherwise (a geometric series whose ratio
+$\zeta^{t-t'}$ is an $n$-th root of unity $\ne1$ when $t\not\equiv t'$). We apply this to the specific function
+$f(a)=a\bmod n$, i.e.\ $f(a)=a$ for $a\in\{0,\dots,n-1\}$.
+
+\subsection{A geometric-sum lemma}
+We need the coefficients $\hat f(t)$, which require $\sum_{a=0}^{n-1}a\,\omega^a$ for a root of unity $\omega$.
+
+\begin{lemma}\label{lem:geo}
+If $\omega^n=1$ and $\omega\ne1$, then $\displaystyle\sum_{a=0}^{n-1}a\,\omega^{a}=\frac{n}{\omega-1}$.
+\end{lemma}
+
+\begin{proof}
+Differentiate the geometric sum $\sum_{a=0}^{n-1}x^a=\dfrac{x^n-1}{x-1}$ and multiply by $x$:
+\[
+\sum_{a=0}^{n-1}a\,x^{a}=\frac{n x^{n}(x-1)-x(x^{n}-1)}{(x-1)^2}.
+\]
+Set $x=\omega$ and use $\omega^n=1$: the numerator becomes $n(\omega-1)-\omega\cdot0=n(\omega-1)$, so the right
+side is $n(\omega-1)/(\omega-1)^2=n/(\omega-1)$.
+\end{proof}
+
+\subsection{Fourier coefficients of the residue function}
+The $t=0$ coefficient is the average value, $\hat f(0)=\frac1n\sum_{a=0}^{n-1}a=\frac{n-1}{2}$. For $t\ne0$,
+Lemma~\ref{lem:geo} with $\omega=\zeta^{-t}$ gives
+\[
+\hat f(t)=\frac1n\sum_{a=0}^{n-1}a\,\zeta^{-ta}=\frac1n\cdot\frac{n}{\zeta^{-t}-1}=\frac{1}{\zeta^{-t}-1}.
+\]
+Therefore, for every $a$,
+\begin{equation}\label{eq:resid}
+a\bmod n=\frac{n-1}{2}+\sum_{t=1}^{n-1}\frac{\zeta^{ta}}{\zeta^{-t}-1}.
+\end{equation}
+This is the key linearisation: the left side is a ``sawtooth,'' the right side a finite trigonometric sum.
+
+\subsection{Summing over $\ell$: enter the Gauss sum}
+Put $a=\ell^2$ in \eqref{eq:resid} and sum over $\ell=0,\dots,n-1$. The constant term contributes
+$n\cdot\frac{n-1}2=\binom n2$, and interchanging the two finite sums,
+\begin{equation}\label{eq:S-gauss}
+S_n=\binom n2+\sum_{t=1}^{n-1}\frac{1}{\zeta^{-t}-1}\sum_{\ell=0}^{n-1}\zeta^{t\ell^2}
+=\binom n2+\sum_{t=1}^{n-1}\frac{G(t)}{\zeta^{-t}-1}.
+\end{equation}
+The inner sum is precisely the Gauss sum $G(t)$. Everything arithmetic is now hidden in $G(t)$.
+
+\subsection{The cotangent identity}
+We simplify the prefactor $\dfrac{1}{\zeta^{-t}-1}$. Writing $\theta=\pi t/n$ so that $\zeta^{-t}=e^{-2i\theta}$,
+and multiplying numerator and denominator by $e^{i\theta}$,
+\[
+\frac{1}{e^{-2i\theta}-1}=\frac{e^{i\theta}}{e^{-i\theta}-e^{i\theta}}=\frac{\cos\theta+i\sin\theta}{-2i\sin\theta}
+=-\frac12+\frac{i}{2}\cot\theta.
+\]
+Hence
+\begin{equation}\label{eq:cot}
+\frac{1}{\zeta^{-t}-1}=-\frac12+\frac{i}{2}\cot\frac{\pi t}{n}.
+\end{equation}
+The real constant $-\tfrac12$ will produce an elementary term; the imaginary $\cot$ part will produce the
+class-number term.
+
+\subsection{Separating the two contributions}
+Insert \eqref{eq:cot} into \eqref{eq:S-gauss}:
+\begin{equation}\label{eq:two-sums}
+S_n-\binom n2=-\frac12\sum_{t=1}^{n-1}G(t)\;+\;\frac{i}{2}\sum_{t=1}^{n-1}G(t)\cot\frac{\pi t}{n}.
+\end{equation}
+We treat the two sums separately.
+
+\subsubsection*{The constant sum}
+Summing $G(t)$ over \emph{all} $t$ and swapping order,
+\[
+\sum_{t=0}^{n-1}G(t)=\sum_{\ell=0}^{n-1}\sum_{t=0}^{n-1}\zeta^{t\ell^2}
+=\sum_{\ell=0}^{n-1} n\,[\,n\mid \ell^2\,]=n\,N_0,\qquad N_0:=\#\{x\bmod n:\ x^2\equiv0\},
+\]
+using $\sum_{t=0}^{n-1}\zeta^{tk}=n$ when $n\mid k$ and $0$ otherwise. Since $G(0)=n$, we get
+$\sum_{t=1}^{n-1}G(t)=nN_0-n$, so the first sum in \eqref{eq:two-sums} equals
+\begin{equation}\label{eq:A}
+A:=-\tfrac12\sum_{t=1}^{n-1}G(t)=\frac{n(1-N_0)}{2}.
+\end{equation}
+
+\subsubsection*{The cotangent sum: only the imaginary part survives}
+Two symmetries collapse the second sum. First, replacing $\ell$ by anything does not matter, but replacing
+$t$ by $n-t$ does:
+\[
+G(n-t)=\sum_{\ell}\zeta^{(n-t)\ell^2}=\sum_\ell\zeta^{-t\ell^2}=\overline{G(t)},\qquad
+\cot\frac{\pi(n-t)}{n}=\cot\!\Bigl(\pi-\frac{\pi t}{n}\Bigr)=-\cot\frac{\pi t}{n}.
+\]
+Now split $G(t)=\Real G(t)+i\,\Imag G(t)$. Under $t\mapsto n-t$, $\Real G$ is \emph{even} and $\Imag G$ is
+\emph{odd}, while $\cot$ is odd. Thus $\Real G(t)\cot\frac{\pi t}{n}$ is odd in $t$ and sums to $0$, whereas
+$\Imag G(t)\cot\frac{\pi t}{n}$ is even and survives:
+\[
+\sum_{t=1}^{n-1}G(t)\cot\frac{\pi t}{n}=i\sum_{t=1}^{n-1}\Imag G(t)\,\cot\frac{\pi t}{n}.
+\]
+Multiplying by $\tfrac i2$ turns the leading $i$ into $-\tfrac12$, so the second sum in \eqref{eq:two-sums} is
+\begin{equation}\label{eq:B}
+B:=-\frac12\sum_{t=1}^{n-1}\Imag G(t)\,\cot\frac{\pi t}{n}.
+\end{equation}
+
+\subsection{The master decomposition}
+Combining \eqref{eq:two-sums}, \eqref{eq:A}, \eqref{eq:B}:
+\begin{equation}\label{eq:master}
+\boxed{\;S_n-\binom n2=A+B,\qquad A=\frac{n(1-N_0)}{2},\quad B=-\frac12\sum_{t=1}^{n-1}\Imag G(t)\,\cot\frac{\pi t}{n}.\;}
+\end{equation}
+Everything elementary is in $A$; everything deep is in $B$.
+
+\section{The term $A$: the squareful correction}
+
+We must count $N_0=\#\{x\bmod n:\ x^2\equiv0\}$. By the Chinese Remainder Theorem this factors over the prime
+powers $p^a\,\|\,n$, and $x^2\equiv0\pmod{p^a}$ exactly when $p^{\lceil a/2\rceil}\mid x$. The number of such $x$
+modulo $p^a$ is $p^{a}/p^{\lceil a/2\rceil}=p^{\lfloor a/2\rfloor}$. Multiplying,
+\[
+N_0=\prod_{p^a\,\|\,n}p^{\lfloor a/2\rfloor}=m.
+\]
+Hence
+\begin{equation}\label{eq:Aval}
+A=\frac{n(1-m)}{2}=-\frac{n(m-1)}{2}.
+\end{equation}
+In words: the squares put $m$-fold extra weight on the residue $0$, and this is the only purely elementary
+deviation from the average. It vanishes precisely when $n$ is squarefree ($m=1$).
+
+\section{The term $B$: the class-number correction}
+
+This is the heart of the proof. We evaluate
+$\sum_{t=1}^{n-1}\Imag G(t)\cot\frac{\pi t}{n}$ in five steps.
+
+\subsection{Step 1 --- reduction to primitive Gauss sums}
+Let $g=\gcd(t,n)$ and write $n=gM$, $t=gc$ with $\gcd(c,M)=1$. In $G(t)=\sum_{k=0}^{n-1}e^{2\pi i gck^2/(gM)}
+=\sum_{k=0}^{n-1}e^{2\pi i ck^2/M}$ the summand depends only on $k\bmod M$, and as $k$ ranges over
+$0,\dots,gM-1$ each residue modulo $M$ occurs $g$ times. Therefore
+\[
+G(t)=g\,g(c;M),\qquad g(c;M):=\sum_{k=0}^{M-1}e^{2\pi i ck^2/M},\qquad
+\cot\frac{\pi t}{n}=\cot\frac{\pi c}{M}.
+\]
+So every $G(t)$ is a rational multiple of a \emph{primitive} Gauss sum $g(c;M)$, $\gcd(c,M)=1$, where
+$M=n/\gcd(t,n)$ is a divisor of $n$. This is the natural ``denominator'' of the angle $\pi t/n$.
+
+\subsection{Step 2 --- Gauss's sign theorem}
+The exact value of $g(c;M)$ --- including the notoriously subtle \emph{sign} --- was determined by Gauss. For
+$\gcd(c,M)=1$,
+\[
+g(c;M)=\begin{cases}
+\sqrt M\,\leg{c}{M} & M\equiv1\pmod4,\\[1mm]
+i\,\sqrt M\,\leg{c}{M} & M\equiv3\pmod4,\\[1mm]
+0 & M\equiv2\pmod4,\\[1mm]
+(1+i^{\,c})\,\leg{M}{c}\,\sqrt M & M\equiv0\pmod4.
+\end{cases}
+\]
+Taking imaginary parts,
+\[
+\Imag g(c;M)=\begin{cases}0 & M\equiv1,2\pmod4,\\[1mm]
+\sqrt M\,\leg{c}{M} & M\equiv3\pmod4,\\[1mm]
+\sqrt M\,\leg{-M}{c} & M\equiv0\pmod4.\end{cases}
+\]
+\textbf{The crucial observation:} in every nonzero case $\Imag g(c;M)=\sqrt M\,\chi_D(c)$, where
+$\chi_D=\leg{D}{\cdot}$ is an \emph{odd, real, primitive} Dirichlet character --- the Kronecker character of an
+imaginary quadratic field $\mathbb{Q}(\sqrt D)$, $D<0$ a fundamental discriminant. (Concretely $D=-M$ when $M$ is
+squarefree $\equiv3\pmod4$; for $4\mid M$ the symbol $\leg{-M}{\cdot}$ reduces to the character of the
+squarefree-kernel discriminant.) This is where the field $\mathbb{Q}(\sqrt D)$ is born: it is forced on us by the
+sign of the Gauss sum.
+
+\subsection{Step 3 --- which modulus $M$ feeds which discriminant}
+A character $\chi_D$ has \emph{conductor} $|D|$ (its smallest period). Comparing conductors on both sides of
+$\Imag g(c;M)=\sqrt M\,\chi_D(c)$ shows that the modulus $M$ produces $\chi_D$ exactly when $M$ is the conductor
+times a perfect square:
+\[
+M=|D|\,s^2,\qquad s\ge1.
+\]
+Intuitively: the ``squarefull part'' $s^2$ of $M$ is invisible to the primitive character $\chi_D$ (it only
+affects which residues are coprime to $M$), so it can be any square, while the squarefree skeleton of $M$ is
+pinned to the conductor $|D|$.
+
+\subsection{Step 4 --- grouping the sum}
+We now organise $\sum_{t}\Imag G(t)\cot\frac{\pi t}{n}$ by the modulus $M=n/\gcd(t,n)$, then by $D$. For a fixed
+$M\mid n$, the $t$'s with $n/\gcd(t,n)=M$ are exactly $t=\tfrac nM c$ with $\gcd(c,M)=1$; for these
+$G(t)=\tfrac nM\,g(c;M)$ and $\cot\frac{\pi t}{n}=\cot\frac{\pi c}{M}$. Hence the $M$-block contributes
+$\frac nM\sum_{\gcd(c,M)=1}\Imag g(c;M)\cot\frac{\pi c}{M}$. Substituting Step~2 and Step~3,
+\[
+\sum_{t=1}^{n-1}\Imag G(t)\cot\frac{\pi t}{n}
+=\sum_{\substack{D<0\ \text{fund.}\\ D\mid n}}\ \sum_{|D|s^2\mid n}
+\frac{n}{|D|s^2}\,\sqrt{|D|s^2}\;T_D(s),
+\]
+where we abbreviate the \emph{finite cotangent sum at level $M=|D|s^2$}
+\[
+T_D(s):=\sum_{\substack{c\bmod |D|s^2\\ \gcd(c,\,|D|s^2)=1}}\chi_D(c)\,\cot\frac{\pi c}{|D|s^2}.
+\]
+
+\subsection{Step 5 --- Dirichlet's class number formula}
+Two classical facts evaluate $T_D(s)$.
+
+\paragraph{The value of $L(1,\chi_D)$.}
+Dirichlet's class number formula states that, for the character $\chi_D$ of the imaginary quadratic field
+$\mathbb{Q}(\sqrt D)$,
+\[
+L(1,\chi_D)=\frac{2\pi\,h_{\mathbb{Q}(\sqrt D)}}{w_D\,\sqrt{|D|}}\;>\;0,
+\qquad L(s,\chi_D)=\sum_{k\ge1}\frac{\chi_D(k)}{k^s}.
+\]
+Here $h_{\mathbb{Q}(\sqrt D)}$ is the class number and $w_D$ the number of units. The positivity
+$L(1,\chi_D)>0$ is the single genuinely deep input of the whole proof; no elementary proof of it is known.
+
+\paragraph{The finite cotangent sum as an $L$-value.}
+For an odd character, $L(1,\cdot)$ has a closed finite expression through cotangents. The level-$M$ sum
+$T_D(s)$ realises $L(1,\psi_M)$ for the imprimitive character $\psi_M$ modulo $M=|D|s^2$ induced from $\chi_D$;
+passing from $\psi_M$ to the primitive $\chi_D$ removes the Euler factors at the primes of $M$ outside the
+conductor:
+\[
+T_D(s)=\frac{2M}{\pi}\,L(1,\psi_M)
+=\frac{2M}{\pi}\,L(1,\chi_D)\!\!\prod_{\substack{p\mid M\\ p\nmid|D|}}\!\!\Bigl(1-\frac{\chi_D(p)}{p}\Bigr).
+\]
+Substituting $M=|D|s^2$ and the value of $L(1,\chi_D)$,
+\[
+T_D(s)=\frac{2|D|s^2}{\pi}\cdot\frac{2\pi\,h_{\mathbb{Q}(\sqrt D)}}{w_D\sqrt{|D|}}\!\!
+\prod_{\substack{p\mid s\\ p\nmid|D|}}\!\!\Bigl(1-\frac{\chi_D(p)}{p}\Bigr)
+=\frac{4\sqrt{|D|}\,s^2\,h_{\mathbb{Q}(\sqrt D)}}{w_D}\!\!\prod_{\substack{p\mid s\\ p\nmid|D|}}\!\!\Bigl(1-\frac{\chi_D(p)}{p}\Bigr).
+\]
+(The primes $p\mid M$ outside the conductor are exactly the primes $p\mid s$ with $p\nmid|D|$.) Finally, since
+$\chi_D(p)=\leg{D}{p}=0$ whenever $p\mid D$, the factor for such $p$ is $1$, so the restriction $p\nmid|D|$ is
+vacuous and the product may run over \emph{all} $p\mid s$.
+
+\subsection{Assembly of $B$}
+Put $\sqrt{|D|s^2}=\sqrt{|D|}\,s$ and the formula for $T_D(s)$ into the grouped sum of Step~4. The $(D,s)$ term is
+\[
+\frac{n}{|D|s^2}\cdot\sqrt{|D|}\,s\cdot\frac{4\sqrt{|D|}\,s^2\,h_{\mathbb{Q}(\sqrt D)}}{w_D}\prod_{p\mid s}\Bigl(1-\tfrac1p\leg Dp\Bigr)
+=\frac{4n\,h_{\mathbb{Q}(\sqrt D)}}{w_D}\,s\prod_{p\mid s}\Bigl(1-\tfrac1p\leg Dp\Bigr),
+\]
+where the two powers of $\sqrt{|D|}$ and of $s$ cancel against the denominator $|D|s^2$. Therefore
+\[
+\sum_{t=1}^{n-1}\Imag G(t)\cot\frac{\pi t}{n}
+=\sum_{\substack{D<0\ \text{fund.}\\ D\mid n}}\frac{4n\,h_{\mathbb{Q}(\sqrt D)}}{w_D}\sum_{D\cdot s^2\mid n}s\prod_{p\mid s}\Bigl(1-\tfrac1p\leg Dp\Bigr),
+\]
+and, using $B=-\tfrac12(\cdots)$ from \eqref{eq:B},
+\begin{equation}\label{eq:Bval}
+B=-2n\sum_{\substack{D<0\ \text{fund.}\\ D\mid n}}\frac{h_{\mathbb{Q}(\sqrt D)}}{w_D}\sum_{D\cdot s^2\mid n}s\prod_{p\mid s}\Bigl(1-\tfrac1p\leg Dp\Bigr).
+\end{equation}
+
+\section{Conclusion}
+
+Inserting $A$ from \eqref{eq:Aval} and $B$ from \eqref{eq:Bval} into the master decomposition
+\eqref{eq:master} gives
+\[
+S_n=\binom n2-\frac{n(m-1)}{2}
+-2n\sum_{\substack{D<0\ \text{fund.}\\ D\mid n}}\frac{h_{\mathbb{Q}(\sqrt D)}}{w_D}\sum_{D\cdot s^2\mid n}s\prod_{p\mid s}\Bigl(1-\tfrac1p\leg Dp\Bigr),
+\]
+which is Theorem~\ref{thm:main} (with $\binom n2=\frac{n(n-1)}2$). \qed
+
+\subsection*{Two remarks}
+\emph{An inequality for free.} Every class number satisfies $h_{\mathbb{Q}(\sqrt D)}\ge1$, every Euler factor
+$1-\tfrac1p\leg Dp\in\{1-\tfrac1p,\,1,\,1+\tfrac1p\}$ is positive, and $m\ge1$; hence both corrections are
+$\ge0$ and $S_n\le\binom n2$, with equality iff $n$ is squarefree and has no divisor $\equiv3\pmod4$.
+
+\emph{Where the depth sits.} Steps 1--4 of $B$, and all of $A$, are elementary. Only two classical theorems are
+used as black boxes: Gauss's sign evaluation of $g(c;M)$ (\S5.2) and Dirichlet's class number formula
+(\S5.5). The lone non-elementary fact inside them is $L(1,\chi_D)>0$.
+\end{document}
