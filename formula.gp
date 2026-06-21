@@ -14,7 +14,7 @@
 
 S(n) =
 {
-  my(m, res, cls, D, h, w, inner, s, fs, fa, pp, ee);
+  my(m, res, cls, D, h, w, inner, fs, fa, pp, ee);
   m   = sqrtint(n \ core(n));               \\ n = m^2 * core(n);  m = square-part root
   res = n*(n-m)/2;                          \\ condensed main + squareful term
   cls = 0;
@@ -23,9 +23,9 @@ S(n) =
     if(isfundamental(D),                    \\ keep only negative fundamental discriminants
       h = qfbclassno(D);                    \\ class number  h_{Q(sqrt D)}
       w = if(D == -3, 6, if(D == -4, 4, 2)); \\ number of units  w_D
-      inner = 0;  s = 1;
-      while(g*s^2 <= n,                      \\ all s >= 1 with D*s^2 | n
-        if(n % (g*s^2) == 0,
+      inner = 0;
+      fordiv(m, s,                           \\ every valid s divides m (the square-part root)
+        if(n % (g*s^2) == 0,                 \\ keep s with D*s^2 | n
           /* f(s) = s * prod_{p|s}(1 - (1/p)(D/p)) = prod_{p^e || s}(p^e - (D/p) p^(e-1)) */
           fs = 1;  fa = factor(s);
           for(i = 1, #fa~,
@@ -33,8 +33,7 @@ S(n) =
             fs *= pp^ee - kronecker(D, pp) * pp^(ee-1)
           );
           inner += fs
-        );
-        s++
+        )
       );
       cls += (h/w) * inner
     )
