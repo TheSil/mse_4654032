@@ -43,14 +43,26 @@ Here $m^2$ is the largest square dividing $n$, so $m=\prod_{p^a\,\|\,n}p^{\lfloo
 
 \begin{theorem}\label{thm:main}
 \[
+\boxed{\;S_n=\frac{n(n-m)}{2}
+-2n\sum_{\substack{\Delta<0\ \text{a discriminant}\\ \Delta\,\mid\, n}}\frac{h(\Delta)}{w(\Delta)}\;}
+\]
+where $\Delta$ runs over all \emph{negative discriminants} dividing $n$ --- that is, all
+$\Delta\equiv0,1\pmod4$, $\Delta<0$, with $-\Delta\mid n$ (fundamental and non-fundamental alike) ---
+$h(\Delta)$ is the class number of the order $\mathcal{O}_\Delta$ of discriminant $\Delta$ (equivalently the
+number of $\mathrm{SL}_2(\mathbb{Z})$-classes of primitive positive-definite binary quadratic forms of
+discriminant $\Delta$), and $w(\Delta)=|\mathcal{O}_\Delta^\times|\in\{2,4,6\}$ is its number of units.
+\end{theorem}
+
+\noindent The proof first produces the equivalent expanded form over \emph{fundamental} discriminants only,
+\begin{equation}\label{eq:double}
 S_n=\frac{n(n-1)}{2}-\frac{n(m-1)}{2}
 -2n\sum_{\substack{D<0\ \text{fundamental}\\ D\,\mid\, n}}\frac{h_{\mathbb{Q}(\sqrt D)}}{w_D}
 \sum_{D\cdot s^2\,\mid\, n}s\prod_{p\mid s}\Bigl(1-\tfrac1p\leg{D}{p}\Bigr),
-\]
-where $D$ runs over negative fundamental discriminants dividing $n$, $h_{\mathbb{Q}(\sqrt D)}$ is the class
-number and $w_D=|\mathcal{O}_{\mathbb{Q}(\sqrt D)}^\times|\in\{2,4,6\}$ the number of units of $\mathbb{Q}(\sqrt D)$,
-and $\leg{D}{p}$ is the Kronecker symbol.
-\end{theorem}
+\end{equation}
+in which $D$ runs over negative fundamental discriminants dividing $n$, $h_{\mathbb{Q}(\sqrt D)}$ is the class
+number and $w_D=|\mathcal{O}_{\mathbb{Q}(\sqrt D)}^\times|$ the number of units of $\mathbb{Q}(\sqrt D)$, and
+$\leg{D}{p}$ is the Kronecker symbol; \S\ref{sec:collapse} then collapses the double sum into the single sum of
+Theorem~\ref{thm:main}.
 
 \section{Strategy}
 
@@ -301,22 +313,61 @@ and, using $B=-\tfrac12(\cdots)$ from \eqref{eq:B},
 B=-2n\sum_{\substack{D<0\ \text{fund.}\\ D\mid n}}\frac{h_{\mathbb{Q}(\sqrt D)}}{w_D}\sum_{D\cdot s^2\mid n}s\prod_{p\mid s}\Bigl(1-\tfrac1p\leg Dp\Bigr).
 \end{equation}
 
+\section{Collapsing the double sum: from fields to orders}\label{sec:collapse}
+
+The expanded form \eqref{eq:double} sums over fundamental discriminants $D$ and, for each, over conductors $s$
+with $Ds^2\mid n$. We now recognise the inner summand as a single class number and merge the two sums into one.
+
+\subsection{The inner summand is a class number of an order}
+Fix a fundamental discriminant $D<0$ and a conductor $s\ge1$, and let $\mathcal{O}_{Ds^2}\subset\mathcal{O}_D$ be the
+order of conductor $s$ inside the maximal order $\mathcal{O}_D$ of $\mathbb{Q}(\sqrt D)$; it has discriminant
+$\Delta=Ds^2$. The class-number formula for non-maximal orders (Cox, \emph{Primes of the form $x^2+ny^2$},
+Thm.~7.24) reads
+\[
+h(Ds^2)=\frac{h_{\mathbb{Q}(\sqrt D)}\;s}{[\mathcal{O}_D^\times:\mathcal{O}_{Ds^2}^\times]}
+\prod_{p\mid s}\Bigl(1-\tfrac1p\leg Dp\Bigr).
+\]
+The unit index is exactly the ratio of unit counts, $[\mathcal{O}_D^\times:\mathcal{O}_{Ds^2}^\times]=w_D/w(Ds^2)$
+(here $w(Ds^2)=2$ for $s>1$, while $w_D\in\{2,4,6\}$). Substituting and dividing by $w(Ds^2)$,
+\begin{equation}\label{eq:order-id}
+\frac{h_{\mathbb{Q}(\sqrt D)}}{w_D}\;s\prod_{p\mid s}\Bigl(1-\tfrac1p\leg Dp\Bigr)
+=\frac{h(Ds^2)}{w(Ds^2)}.
+\end{equation}
+Thus the entire $(D,s)$ summand of \eqref{eq:double} is $h(\Delta)/w(\Delta)$ for the discriminant
+$\Delta=Ds^2$; the conductor product and the exceptional units $w_D\in\{4,6\}$ are absorbed into the single
+object $h(\Delta)/w(\Delta)$.
+
+\subsection{Re-indexing by discriminant}
+Every negative discriminant $\Delta$ factors \emph{uniquely} as $\Delta=Ds^2$ with $D$ fundamental and $s\ge1$
+its conductor. Hence the pairs $(D,s)$ with $D$ fundamental, $D\mid n$ and $Ds^2\mid n$ are in bijection with the
+negative discriminants $\Delta\mid n$ (note $Ds^2\mid n\iff\Delta\mid n$, which forces $D\mid n$ automatically).
+Applying \eqref{eq:order-id} term by term to \eqref{eq:Bval},
+\begin{equation}\label{eq:Bsingle}
+B=-2n\sum_{\substack{D<0\ \text{fund.}\\ D\mid n}}\frac{h_{\mathbb{Q}(\sqrt D)}}{w_D}\sum_{D\cdot s^2\mid n}s\prod_{p\mid s}\Bigl(1-\tfrac1p\leg Dp\Bigr)
+=-2n\sum_{\substack{\Delta<0\ \text{disc.}\\ \Delta\mid n}}\frac{h(\Delta)}{w(\Delta)}.
+\end{equation}
+
 \section{Conclusion}
 
-Inserting $A$ from \eqref{eq:Aval} and $B$ from \eqref{eq:Bval} into the master decomposition
-\eqref{eq:master} gives
+Inserting $A$ from \eqref{eq:Aval} and $B$ from \eqref{eq:Bsingle} into the master decomposition
+\eqref{eq:master}, and condensing the elementary part via
+$\binom n2-\frac{n(m-1)}2=\frac{n(n-1)}2-\frac{n(m-1)}2=\frac{n(n-m)}2$, gives
 \[
-S_n=\binom n2-\frac{n(m-1)}{2}
--2n\sum_{\substack{D<0\ \text{fund.}\\ D\mid n}}\frac{h_{\mathbb{Q}(\sqrt D)}}{w_D}\sum_{D\cdot s^2\mid n}s\prod_{p\mid s}\Bigl(1-\tfrac1p\leg Dp\Bigr),
+S_n=\frac{n(n-m)}{2}
+-2n\sum_{\substack{\Delta<0\ \text{disc.}\\ \Delta\mid n}}\frac{h(\Delta)}{w(\Delta)},
 \]
-which is Theorem~\ref{thm:main} (with $\binom n2=\frac{n(n-1)}2$). \qed
+which is Theorem~\ref{thm:main}. The intermediate equality \eqref{eq:double} over fundamental discriminants is
+\eqref{eq:Bsingle} read right-to-left. \qed
 
 \subsection*{Two remarks}
-\emph{An inequality for free.} Every class number satisfies $h_{\mathbb{Q}(\sqrt D)}\ge1$, every Euler factor
-$1-\tfrac1p\leg Dp\in\{1-\tfrac1p,\,1,\,1+\tfrac1p\}$ is positive, and $m\ge1$; hence both corrections are
-$\ge0$ and $S_n\le\binom n2$, with equality iff $n$ is squarefree and has no divisor $\equiv3\pmod4$.
+\emph{An inequality for free.} Every class number satisfies $h(\Delta)\ge1$, every unit count $w(\Delta)>0$, and
+$m\ge1$; hence both corrections are $\ge0$ and $S_n\le\binom n2$, with equality iff $n$ is squarefree and has no
+divisor $\equiv3\pmod4$ (equivalently, no negative discriminant divides $n$). The same positivity is visible in
+the expanded form \eqref{eq:double}, where each Euler factor
+$1-\tfrac1p\leg Dp\in\{1-\tfrac1p,\,1,\,1+\tfrac1p\}$ is positive.
 
-\emph{Where the depth sits.} Steps 1--4 of $B$, and all of $A$, are elementary. Only two classical theorems are
+\emph{Where the depth sits.} Steps 1--4 of $B$, and all of $A$, are elementary; the collapse of
+\S\ref{sec:collapse} is pure bookkeeping via the order class-number formula. Only two classical theorems are
 used as black boxes: Gauss's sign evaluation of $g(c;M)$ (\S5.2) and Dirichlet's class number formula
 (\S5.5). The lone non-elementary fact inside them is $L(1,\chi_D)>0$.
 \end{document}
